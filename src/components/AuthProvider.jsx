@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase"; // Adjust the import based on your firebase configuration
+import { auth } from "../firebase.js"; // Adjust the import based on your firebase configuration
 
 export const AuthContext = createContext();
 
@@ -20,11 +20,14 @@ export function AuthProvider({ children }) {
 
   // Handle logout action by signing out and clearing currentUser state
   const logout = () => {
-    auth.signOut().then(() => {
-      setCurrentUser(null); // Clear the currentUser state after sign-out
-    }).catch((error) => {
-      console.error("Error during sign-out:", error);
-    });
+    auth
+      .signOut()
+      .then(() => {
+        setCurrentUser(null); // Clear the currentUser state after sign-out
+      })
+      .catch((error) => {
+        console.error("Error during sign-out:", error);
+      });
   };
 
   const value = { currentUser, logout }; // Provide the logout function in context
