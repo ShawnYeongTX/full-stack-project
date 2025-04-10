@@ -6,14 +6,14 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCQmfT2nxs8V88NsoKzIDsMYGHvC66O-Ng",
-  authDomain: "car-rental-service-ce8bc.firebaseapp.com",
-  projectId: "car-rental-service-ce8bc",
-  storageBucket: "car-rental-service-ce8bc.firebasestorage.app",
-  messagingSenderId: "881063543525",
-  appId: "1:881063543525:web:910d917f5793f93a054a0c"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app)
+export const auth = getAuth(app);
