@@ -7,7 +7,7 @@ import EditUserBooking from "./EditUserBooking";
 
 export default function UserBookings() {
   const { currentUser } = useContext(AuthContext);
-  const [bookingDetails, setBookingDetails] = useState(null);
+  const [bookingDetails, setBookingDetails] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
