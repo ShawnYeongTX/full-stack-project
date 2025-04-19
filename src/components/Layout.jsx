@@ -4,31 +4,26 @@ import { Navbar, Container } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
 
-
-export default function Layout() {
+export default function Layout({ children }) {
   const { currentUser, logout } = useContext(AuthContext);
-
 
   if (!currentUser) {
     return null;
   }
 
-
-
   return (
-    <div
-    //   style={{
-    //     position: "relative",
-    //     minHeight: "100vh",
-    //     backgroundImage: `url(${bgImage})`,
-    //     backgroundSize: "cover",
-    //     backgroundPosition: "center",
-    //     zIndex: 1,
-    //   }}
-    >
+    <div>
       {/* Navbar will always appear on top */}
-      <Navbar bg="dark" variant="dark" expand="lg" style={{ zIndex: 2 }}>
-        <Container>
+      <Navbar
+        variant="dark"
+        style={{
+          width: "100%",
+          position: "absolute",
+          left: 0,
+          backgroundColor: "rgba(1, 1, 1, 0.7)",
+        }}
+      >
+        <Container fluid>
           <Navbar.Brand as={Link} to="/home">
             <i style={{ marginRight: "5px" }} className="bi bi-house-door"></i>
             Home
@@ -61,6 +56,7 @@ export default function Layout() {
           </Navbar.Brand>
         </Container>
       </Navbar>
+      {children}
     </div>
   );
 }

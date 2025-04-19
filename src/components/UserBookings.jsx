@@ -2,15 +2,18 @@ import Layout from "./Layout";
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthProvider";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Row, Col, Spinner, Container } from "react-bootstrap"; // Import Spinner for loading state
 import EditUserBooking from "./EditUserBooking";
+import Footer from "./Footer";
+import { useBackgroundImage } from "../../backgroundImageContext"; // Import the background image context
 
 export default function UserBookings() {
   const { currentUser } = useContext(AuthContext);
   const [bookingDetails, setBookingDetails] = useState([]);
-  const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const backgroundImage = useBackgroundImage(); // Get the background image from context
 
   useEffect(() => {
     if (currentUser?.uid) {
@@ -29,14 +32,13 @@ export default function UserBookings() {
         response.data.data.length > 0
       ) {
         setBookingDetails(response.data.data);
-        console.log(response.data.data);
       } else {
         console.error("No booking details found for this user.");
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -59,8 +61,6 @@ export default function UserBookings() {
   };
 
   const handleEditConfirm = (updatedBooking) => {
-    // Handle booking update in the parent component
-    console.log("Updated Booking received in parent", updatedBooking); // to check whether the updated details has been passed from another component
     const updatedBookings = bookingDetails.map((booking) =>
       booking.id === updatedBooking.id ? updatedBooking : booking
     );
@@ -72,67 +72,87 @@ export default function UserBookings() {
     const updatedBookings = bookingDetails.filter(
       (booking) => booking.id !== deletedBookingId
     );
-
     setBookingDetails(updatedBookings);
     setShowEditModal(false);
   };
 
   return (
-    <>
+    <Container
+      fluid
+      className="d-flex flex-column min-vh-100"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        margin: "0px",
+        padding: "0px",
+        width: "100%",
+      }}
+    >
       <Layout />
-      <Card>
-        <div className="user-booking">
-          <h2>Your current bookings</h2>
-
-          {isLoading ? (
-            <p>Loading your booking details...</p>
-          ) : bookingDetails.length > 0 ? (
-            bookingDetails.map((booking) => (
-              <div key={booking.id}>
-                <p>
-                  <strong>Car:</strong> {booking.car_details.make}{" "}
-                  {booking.car_details.model}
-                </p>
-                <p>
-                  <strong>Name:</strong> {booking.name}
-                </p>
-                <p>
-                  <strong>Contact:</strong> {booking.contact}
-                </p>
-                <p>
-                  <strong>Start Date:</strong> {formatDate(booking.start_date)}
-                </p>
-                <p>
-                  <strong>End Date:</strong> {formatDate(booking.end_date)}
-                </p>
-                <p>
-                  <strong>Total Price (RM):</strong>{" "}
-                  {formatCurrency(booking.total_price)}
-                </p>
-                <Button
-                  variant="primary"
-                  className="mx-2"
-                  onClick={() => handleEditBooking(booking)}
+      <div className="user-booking flex-grow-1">
+        {isLoading ? (
+          <Row
+            className="justify-content-center align-items-center"
+            style={{ height: "100vh" }}
+          >
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </Row>
+        ) : bookingDetails.length > 0 ? (
+          <Row>
+            {bookingDetails.map((booking) => (
+              <Col md={4} key={booking.id} className="mb-4 mt-5">
+                <Card
+                  style={{
+                    backgroundColor: "rgba(1, 1, 1, 0.8)",
+                    border: "none",
+                    color: "white",
+                    marginLeft: "15px",
+                    marginRight: "15px",
+                    marginTop: "50px",
+                  }}
                 >
-                  Manage Booking
-                </Button>
-                <hr />
-              </div>
-            ))
-          ) : (
-            <p>No current bookings found.</p>
-          )}
-        </div>
-      </Card>
+                  <Card.Body>
+                    <Card.Title>
+                      {booking.car_details.make} {booking.car_details.model}
+                    </Card.Title>
+                    <Card.Text style={{ color: "white" }}>
+                      <strong>Name:</strong> {booking.name} <br />
+                      <strong>Contact:</strong> {booking.contact} <br />
+                      <strong>Start Date:</strong>{" "}
+                      {formatDate(booking.start_date)} <br />
+                      <strong>End Date:</strong> {formatDate(booking.end_date)}{" "}
+                      <br />
+                      <strong>Total Price:</strong>{" "}
+                      {formatCurrency(booking.total_price)}
+                    </Card.Text>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEditBooking(booking)}
+                    >
+                      Manage Booking
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <p>No current bookings found.</p>
+        )}
+      </div>
+      <Footer />
       {showEditModal && selectedBooking && (
         <EditUserBooking
           show={showEditModal}
           onHide={() => setShowEditModal(false)}
           bookingDetails={selectedBooking}
-          onConfirmDelete={handleConfirmDelete} // Pass confirm delete handler
-          onEditConfirm={handleEditConfirm} // Pass edit confirm handler
+          onConfirmDelete={handleConfirmDelete}
+          onEditConfirm={handleEditConfirm}
         />
       )}
-    </>
+    </Container>
   );
 }
