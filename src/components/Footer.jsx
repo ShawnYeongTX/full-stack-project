@@ -13,7 +13,7 @@ export default function Footer() {
         <Row>
           <Col className="text-center">
             <p>
-              &copy; {new Date().getFullYear()} Delux Car Rental. All rights
+              &copy; {new Date().getFullYear()} Deluxe Car Rental. All rights
               reserved.
             </p>
             <p>
@@ -26,12 +26,24 @@ export default function Footer() {
                 Terms of Service
               </a>
             </p>
-            <p>
-              Contact us:{" "}
-              <a href="mailto:support@dcr.com" className="text-light">
-                support@dcr.com
-              </a>
-            </p>
+          </Col>
+          <Col className="text-center">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <i className="bi bi-pin-map">
+                <p> Kuala Lumpur, Malaysia</p>
+              </i>
+              <i className="bi bi-envelope">
+                <a href="mailto:support@dcr.com" className="text-light">
+                  <p>support@dcr.com</p>
+                </a>
+              </i>
+            </div>
           </Col>
         </Row>
       </Container>

@@ -39,7 +39,7 @@ export default function Layout({ children }) {
 
           <Navbar.Brand as={Link} to="/contact">
             <i style={{ marginRight: "5px" }} className="bi bi-telephone"></i>
-            Contact
+            Contact Us
           </Navbar.Brand>
 
           <Navbar.Brand as={Link} to="/about">

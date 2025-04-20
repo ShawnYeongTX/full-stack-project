@@ -123,7 +123,7 @@ export default function EditUserBooking({
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Update or Delete Booking</Modal.Title>
+        <Modal.Title>Update or Delete your Booking</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -135,10 +135,10 @@ export default function EditUserBooking({
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="contact">
+          <Form.Group className="mb-3" controlId="formBasicContact">
             <Form.Label>Contact</Form.Label>
             <Form.Control
-              type="text"
+              type="tel"
               value={updatedBooking.contact}
               onChange={handleInputChange}
             />

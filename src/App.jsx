@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import UserBookings from "./components/UserBookings";
 import "./App.css";
 import { BackgroundImageProvider } from "../backgroundImageContext";
+import AboutPage from "./pages/AboutPage";
+import ContactUs from "./pages/ContactUs";
 
 export default function App() {
   return (
@@ -15,6 +17,8 @@ export default function App() {
             <Route path="/login" element={<AuthPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/booking" element={<UserBookings />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactUs />} />
             <Route path="*" element={<AuthPage />} />
           </Routes>
         </BrowserRouter>
