@@ -32,10 +32,8 @@ export default function CarPage() {
       const carsFromApi = response.data.data;
 
       const updatedCars = carsFromApi.map((car) => {
-        const matchedImage = carImages.find((img) => img.id === car.id);
         return {
           ...car,
-          image: matchedImage?.image || "",
         };
       });
 
@@ -67,59 +65,18 @@ export default function CarPage() {
 
   useEffect(() => {
     fetchImages();
+    fetchCars();
   }, []);
 
   // List of cars with their IDs and prices
-  const cars = [
-    {
-      id: 1,
-      make: "Lamborghini Huracan",
-      price: 4000,
-      image: carImages[0] ? carImages[0].url : " ",
-    },
-    {
-      id: 2,
-      make: "Mercedes AMG CLA",
-      price: 1999,
-      image: carImages[1] ? carImages[1].url : " ",
-    },
-    {
-      id: 3,
-      make: "Toyota Supra 3.0",
-      price: 6000,
-      image: carImages[2] ? carImages[2].url : " ",
-    },
-    {
-      id: 4,
-      make: "Mclaren 720s",
-      price: 9000,
-      image: carImages[3] ? carImages[3].url : " ",
-    },
-    {
-      id: 5,
-      make: "BMW i8",
-      price: 6999,
-      image: carImages[4] ? carImages[4].url : " ",
-    },
-    {
-      id: 6,
-      make: "Ferrari 488 Pista",
-      price: 9999,
-      image: carImages[5] ? carImages[5].url : " ",
-    },
-    {
-      id: 7,
-      make: "Ferrari 458 Italia",
-      price: 7999,
-      image: carImages[6] ? carImages[6].url : " ",
-    },
-    {
-      id: 8,
-      make: "Honda Civic Type R FK8",
-      price: 5000,
-      image: carImages[7] ? carImages[7].url : " ",
-    },
-  ];
+  const cars = carsDetails.map((car, index) => ({
+    id: car.id,
+    make: car.make,
+    model: car.model,
+    year: car.year,
+    price: car.price_per_day,
+    image: carImages[index] ? carImages[index].url : " ",
+  }));
 
   return (
     <Container>
@@ -148,14 +105,16 @@ export default function CarPage() {
               >
                 <Card.Img variant="top" src={car.image} className="rounded-5" />
                 <Card.Body>
-                  <Card.Title style={{ color: "white" }}>{car.make}</Card.Title>
+                  <Card.Title style={{ color: "white" }}>
+                    {car.make} {car.model} ({car.year})
+                  </Card.Title>
                   <Card.Text style={{ color: "white" }}>
                     RM {car.price} / day
                   </Card.Text>
                   <Button
                     className="btn btn-primary"
-                    onClick={
-                      () => handleShowBookingModal(car.make, car.id, car.price) // Fixed car.title to car.make
+                    onClick={() =>
+                      handleShowBookingModal(car.make, car.id, car.price)
                     }
                   >
                     Book Now
@@ -171,8 +130,8 @@ export default function CarPage() {
         show={show}
         handleClose={handleCloseBookingModal}
         title={make}
-        carId={carId} // Pass the selected car ID to the modal
-        carPrice={carPrice} // Pass the selected car price to the modal
+        carId={carId}
+        carPrice={carPrice}
       />
     </Container>
   );
