@@ -8,13 +8,14 @@ export default function EditUserBooking({
   onConfirmDelete,
   bookingDetails,
   onEditConfirm,
+  carPrice,
 }) {
   const [updatedBooking, setUpdatedBooking] = useState({
     name: bookingDetails.name || "",
     contact: bookingDetails.contact || "",
     start_date: bookingDetails.start_date || "",
     end_date: bookingDetails.end_date || "",
-    price: bookingDetails.price || 0,
+    total_price: bookingDetails.total_price || 0,
   });
 
   // Calculate price based on days between start and end date
@@ -32,8 +33,7 @@ export default function EditUserBooking({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end days
 
     // Assuming a daily rate of $50 (modify as needed)
-    const dailyRate = 50;
-    return diffDays * dailyRate;
+    return diffDays * carPrice;
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function EditUserBooking({
       contact: bookingDetails.contact || "",
       start_date: bookingDetails.start_date || "",
       end_date: bookingDetails.end_date || "",
-      price:
+      total_price:
         bookingDetails.price ||
         calculatePrice(bookingDetails.start_date, bookingDetails.end_date),
     });
@@ -81,6 +81,10 @@ export default function EditUserBooking({
 
   const handleEdit = async () => {
     try {
+      const total_price = calculatePrice(
+        updatedBooking.start_date,
+        updatedBooking.end_date
+      );
       const response = await axios.put(
         `https://car-booking-api.vercel.app/booking/${bookingDetails.id}`,
         updatedBooking
@@ -95,7 +99,10 @@ export default function EditUserBooking({
       }
       onHide();
     } catch (error) {
-      console.error("Error updating booking:", error);
+      console.error(
+        "Error updating booking:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
@@ -135,7 +142,7 @@ export default function EditUserBooking({
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicContact">
+          <Form.Group className="mb-3" controlId="contact">
             <Form.Label>Contact</Form.Label>
             <Form.Control
               type="tel"
@@ -163,7 +170,7 @@ export default function EditUserBooking({
             <Form.Label>Price</Form.Label>
             <Form.Control
               type="text"
-              value={`RM ${updatedBooking.price}`}
+              value={`RM ${updatedBooking.total_price}`}
               disabled
             />
             <Form.Text className="text-muted">

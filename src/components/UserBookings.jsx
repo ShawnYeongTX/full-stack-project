@@ -105,6 +105,7 @@ export default function UserBookings() {
             {bookingDetails.map((booking) => (
               <Col md={4} key={booking.id} className="mb-4 mt-5">
                 <Card
+                  className="rounded-5"
                   style={{
                     backgroundColor: "rgba(1, 1, 1, 0.8)",
                     border: "none",

@@ -47,6 +47,7 @@ export default function NewBookingModal({
       name: name,
       contact: contact,
     };
+    console.log("Booking Data", bookingData);
 
     try {
       setIsLoading(true); // Start loading
@@ -63,7 +64,10 @@ export default function NewBookingModal({
         setError("Booking failed. Car details are unavailable.");
       }
     } catch (error) {
-      console.error("Error booking car:", error);
+      console.error(
+        "Error booking car:",
+        error.response ? error.response.data : error.message
+      );
       setError("Something went wrong while booking. Please try again.");
     } finally {
       setIsLoading(false); // End loading
