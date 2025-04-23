@@ -32,7 +32,7 @@ export default function Layout({ children }) {
             className="me-5"
             style={{ fontSize: "2rem", fontWeight: "bold" }}
           >
-            <span style={{ marginRight: "70rem", marginLeft: "1rem" }}>
+            <span style={{ marginRight: "80rem", marginLeft: "1rem" }}>
               DCR
             </span>
           </Navbar.Brand>
