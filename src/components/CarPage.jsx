@@ -8,6 +8,8 @@ import axios from "axios";
 
 export default function CarPage() {
   const [make, setCarMake] = useState("");
+  const [model, setCarModel] = useState("");
+  const [year, setCarYear] = useState(null);
   const [carId, setCarId] = useState(null); // State to hold the selected car ID
   const [carPrice, setCarPrice] = useState(null); // State to hold the selected car price
   const [show, setShow] = useState(false);
@@ -17,11 +19,16 @@ export default function CarPage() {
 
   const handleCloseBookingModal = () => setShow(false);
 
-  const handleShowBookingModal = (title, carId, price) => {
+  const handleShowBookingModal = (title, carId, price, model, year) => {
     console.log("Title:", title);
     console.log("Car ID:", carId);
     console.log("Price:", price);
+    console.log("Car Year Booking Modal:", year);
+    console.log("Car Model Booking Modal:", model);
+    console.log("Setting car price", carPrice);
     setCarMake(title);
+    setCarModel(model);
+    setCarYear(year);
     setCarId(carId); // Set the car ID when showing the modal
     setCarPrice(price); // Set the car price when showing the modal
     setShow(true);
@@ -81,6 +88,9 @@ export default function CarPage() {
     image: carImages[index] ? carImages[index].url : " ",
   }));
 
+  console.log(cars);
+  console.log("Car Price from CarPage:", carPrice);
+
   return (
     <Container>
       <Row className="justify-content-center" style={{ marginTop: "50px" }}>
@@ -117,7 +127,13 @@ export default function CarPage() {
                   <Button
                     className="btn btn-primary"
                     onClick={() =>
-                      handleShowBookingModal(car.make, car.carId, car.price)
+                      handleShowBookingModal(
+                        car.make,
+                        car.carId,
+                        car.price,
+                        car.model,
+                        car.year
+                      )
                     }
                   >
                     Book Now
@@ -128,11 +144,12 @@ export default function CarPage() {
           ))
         )}
       </Row>
-
       <NewBookingModal
         show={show}
         handleClose={handleCloseBookingModal}
         title={make}
+        model={model}
+        year={year}
         carId={carId}
         carPrice={carPrice}
       />

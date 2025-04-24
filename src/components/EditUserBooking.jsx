@@ -18,8 +18,10 @@ export default function EditUserBooking({
     total_price: bookingDetails.total_price || 0,
   });
 
+  console.log("Car Price from EditUserBooking:", carPrice);
+
   // Calculate price based on days between start and end date
-  const calculatePrice = (startDate, endDate) => {
+  const calculatePrice = (startDate, endDate, carPrice) => {
     if (!startDate || !endDate) return 0;
 
     const start = new Date(startDate);
@@ -36,6 +38,8 @@ export default function EditUserBooking({
     return diffDays * carPrice;
   };
 
+  console.log("Car Price from EditUserBooking:", carPrice);
+
   useEffect(() => {
     setUpdatedBooking({
       name: bookingDetails.name || "",
@@ -44,9 +48,13 @@ export default function EditUserBooking({
       end_date: bookingDetails.end_date || "",
       total_price:
         bookingDetails.price ||
-        calculatePrice(bookingDetails.start_date, bookingDetails.end_date),
+        calculatePrice(
+          bookingDetails.start_date,
+          bookingDetails.end_date,
+          carPrice
+        ),
     });
-  }, [bookingDetails]);
+  }, [bookingDetails, carPrice]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -62,20 +70,19 @@ export default function EditUserBooking({
     const field = fieldMap[id] || id;
 
     setUpdatedBooking((prev) => {
-      const newState = {
+      const updatedField = {
         ...prev,
         [field]: value,
       };
 
-      // Recalculate price when dates change
-      if (field === "start_date" || field === "end_date") {
-        newState.price = calculatePrice(
-          field === "start_date" ? value : prev.start_date,
-          field === "end_date" ? value : prev.end_date
-        );
-      }
+      // ✅ Always define these based on updated field values
+      const startDate = field === "start_date" ? value : prev.start_date;
+      const endDate = field === "end_date" ? value : prev.end_date;
 
-      return newState;
+      // ✅ Always recalculate price safely
+      updatedField.total_price = calculatePrice(startDate, endDate, carPrice);
+
+      return updatedField;
     });
   };
 
@@ -83,11 +90,18 @@ export default function EditUserBooking({
     try {
       const total_price = calculatePrice(
         updatedBooking.start_date,
-        updatedBooking.end_date
+        updatedBooking.end_date,
+        carPrice
       );
+
+      const updatedData = {
+        ...updatedBooking,
+        total_price,
+      };
+
       const response = await axios.put(
         `https://car-booking-api.vercel.app/booking/${bookingDetails.id}`,
-        updatedBooking
+        updatedData
       );
 
       console.log("API Response:", response);

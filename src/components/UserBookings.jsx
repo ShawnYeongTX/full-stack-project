@@ -26,12 +26,20 @@ export default function UserBookings() {
       const response = await axios.get(
         `https://car-booking-api.vercel.app/booking/${user_id}`
       );
+
       if (
         response.data &&
         response.data.data &&
         response.data.data.length > 0
       ) {
-        setBookingDetails(response.data.data);
+        const bookingsWithPrice = response.data.data.map((booking) => ({
+          ...booking,
+          price_per_day: parseFloat(booking.car_details?.price_per_day || 0),
+        }));
+
+        console.log("Bookings with price_per_day:", bookingsWithPrice);
+
+        setBookingDetails(bookingsWithPrice);
       } else {
         console.error("No booking details found for this user.");
       }
@@ -41,6 +49,8 @@ export default function UserBookings() {
       setIsLoading(false);
     }
   };
+
+  console.log("Booking details:", bookingDetails);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -75,6 +85,8 @@ export default function UserBookings() {
     setBookingDetails(updatedBookings);
     setShowEditModal(false);
   };
+
+  console.log("Car Price pull data: ", bookingDetails.price_per_day);
 
   return (
     <Container
@@ -152,6 +164,7 @@ export default function UserBookings() {
           bookingDetails={selectedBooking}
           onConfirmDelete={handleConfirmDelete}
           onEditConfirm={handleEditConfirm}
+          carPrice={selectedBooking.price_per_day}
         />
       )}
     </Container>

@@ -10,6 +10,8 @@ export default function NewBookingModal({
   title,
   carId,
   carPrice,
+  model,
+  year
 }) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -84,7 +86,7 @@ export default function NewBookingModal({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Booking for {title}</Modal.Title>
+          <Modal.Title>Booking for {title} {model} ({year})</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
