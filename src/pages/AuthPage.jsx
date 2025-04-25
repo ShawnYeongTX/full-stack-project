@@ -6,7 +6,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { AuthContext } from "../components/AuthProvider"; 
+import { AuthContext } from "../components/AuthProvider";
 
 export default function AuthPage() {
   const [modalShow, setModalShow] = useState(null);
