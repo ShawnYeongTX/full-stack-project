@@ -1,12 +1,17 @@
 import { Card, Container, Row, Col, Button, Spinner } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import NewBookingModal from "../components/NewBookingModal";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
+import { AuthContext } from "./AuthProvider";
 import "../App.css";
 import axios from "axios";
 
 export default function CarPage() {
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [make, setCarMake] = useState("");
   const [model, setCarModel] = useState("");
   const [year, setCarYear] = useState(null);
@@ -20,6 +25,11 @@ export default function CarPage() {
   const handleCloseBookingModal = () => setShow(false);
 
   const handleShowBookingModal = (title, carId, price, model, year) => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
     console.log("Title:", title);
     console.log("Car ID:", carId);
     console.log("Price:", price);

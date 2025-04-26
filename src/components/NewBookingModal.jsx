@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Alert } from "react-bootstrap";
 import axios from "axios";
 import { AuthContext } from "./AuthProvider";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ export default function NewBookingModal({
   carId,
   carPrice,
   model,
-  year
+  year,
 }) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -20,6 +20,7 @@ export default function NewBookingModal({
   const [bookingDetails, setBookingDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(""); // To store errors from API
+  const [alertVisible, setAlertVisible] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -72,8 +73,10 @@ export default function NewBookingModal({
       );
       setError("Something went wrong while booking. Please try again.");
     } finally {
+      setAlertVisible(true);
+      setTimeout(() => setAlertVisible(false), 5000);
       setIsLoading(false); // End loading
-      handleClose(); // Close the modal after booking
+      setTimeout(() => handleClose(true), 5500); // Close the modal after booking
     }
   };
 
@@ -86,7 +89,9 @@ export default function NewBookingModal({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Booking for {title} {model} ({year})</Modal.Title>
+          <Modal.Title>
+            Booking for {title} {model} ({year})
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -127,7 +132,12 @@ export default function NewBookingModal({
           </Form>
 
           {/* Error message if booking fails */}
-          {error && <p className="text-danger">{error}</p>}
+          {alertVisible && (
+            <Alert variant="success" className="mt-3">
+              Booking succesful, we will contact you soon for the pickup
+              location. Meanwhile we hope you enjoyed your time at DCR.
+            </Alert>
+          )}
 
           {/* Display booking confirmation if bookingDetails is available */}
           {bookingDetails ? (
@@ -155,9 +165,13 @@ export default function NewBookingModal({
             </div>
           ) : (
             <p>
-              {isLoading
-                ? "Booking in progress..."
-                : "Fill in your details to book."}
+              {isLoading ? (
+                <Alert variant="success" className="mt-3">
+                  Making your booking...
+                </Alert>
+              ) : (
+                "Fill in your details to book."
+              )}
             </p>
           )}
         </Modal.Body>

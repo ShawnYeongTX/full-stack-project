@@ -13,12 +13,12 @@ export default function HomePage() {
   const { currentUser, logout } = useContext(AuthContext);
   const backgroundImage = useBackgroundImage();
 
-  useEffect(() => {
-    // Redirect to /login if the user is not logged in
-    if (!currentUser) {
-      navigate("/login");
-    }
-  }, [currentUser, navigate]); // Only re-run when currentUser changes
+  // useEffect(() => {
+  //   // Redirect to /login if the user is not logged in
+  //   if (!currentUser) {
+  //     navigate("/login");
+  //   }
+  // }, [currentUser, navigate]); // Only re-run when currentUser changes
 
   return (
     <Container

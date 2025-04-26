@@ -1,17 +1,15 @@
-// import bgImage from "../src/assets/background.jpeg";
 import { Link } from "react-router-dom";
 import { Navbar, Container } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthProvider";
-
 import "../App.css";
 
 export default function Layout({ children }) {
   const { currentUser, logout } = useContext(AuthContext);
 
-  if (!currentUser) {
-    return null;
-  }
+  // if (!currentUser) {
+  //   return null;
+  // }
 
   return (
     <div>
@@ -80,19 +78,34 @@ export default function Layout({ children }) {
             About
           </Navbar.Brand>
 
-          <Navbar.Brand
-            as={Link}
-            to="/login"
-            className="me-1 navbar-text"
-            onClick={logout}
-            style={{ fontSize: "18px" }}
-          >
-            <i
-              style={{ marginRight: "5px" }}
-              className="bi bi-box-arrow-right"
-            ></i>
-            Logout
-          </Navbar.Brand>
+          {currentUser ? (
+            <Navbar.Brand
+              as={Link}
+              to="/login"
+              className="me-1 navbar-text"
+              onClick={logout}
+              style={{ fontSize: "18px" }}
+            >
+              <i
+                style={{ marginRight: "5px" }}
+                className="bi bi-box-arrow-right"
+              ></i>
+              Logout
+            </Navbar.Brand>
+          ) : (
+            <Navbar.Brand
+              as={Link}
+              to="/login"
+              className="me-1 navbar-text"
+              style={{ fontSize: "18px" }}
+            >
+              <i
+                style={{ marginRight: "5px" }}
+                className="bi bi-box-arrow-in-right"
+              ></i>
+              Login
+            </Navbar.Brand>
+          )}
         </Container>
       </Navbar>
       {children}

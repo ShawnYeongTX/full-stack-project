@@ -1,25 +1,38 @@
 import Layout from "./Layout";
 import axios from "axios";
 import { useState, useEffect, useContext } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
-import { Card, Button, Row, Col, Spinner, Container } from "react-bootstrap"; // Import Spinner for loading state
+import {
+  Card,
+  Button,
+  Row,
+  Col,
+  Spinner,
+  Container,
+  Alert,
+} from "react-bootstrap"; // Import Spinner for loading state
 import EditUserBooking from "./EditUserBooking";
 import Footer from "./Footer";
 import { useBackgroundImage } from "../../backgroundImageContext"; // Import the background image context
 
 export default function UserBookings() {
+  const nagivate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const [bookingDetails, setBookingDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const backgroundImage = useBackgroundImage(); // Get the background image from context
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    if (currentUser?.uid) {
+    if (!currentUser) {
+      nagivate("/login");
+    } else if (currentUser?.uid) {
       handleUserBooking(currentUser.uid);
     }
-  }, [currentUser]);
+  }, [currentUser, nagivate]);
 
   const handleUserBooking = async (user_id) => {
     try {
@@ -71,11 +84,11 @@ export default function UserBookings() {
   };
 
   const handleEditConfirm = (updatedBooking) => {
+    console.log("Edit Confimed:", updatedBooking);
     const updatedBookings = bookingDetails.map((booking) =>
       booking.id === updatedBooking.id ? updatedBooking : booking
     );
     setBookingDetails(updatedBookings);
-    setShowEditModal(false);
   };
 
   const handleConfirmDelete = (deletedBookingId) => {
@@ -85,8 +98,6 @@ export default function UserBookings() {
     setBookingDetails(updatedBookings);
     setShowEditModal(false);
   };
-
-  console.log("Car Price pull data: ", bookingDetails.price_per_day);
 
   return (
     <Container
@@ -166,6 +177,12 @@ export default function UserBookings() {
           onEditConfirm={handleEditConfirm}
           carPrice={selectedBooking.price_per_day}
         />
+      )}
+      {alertVisible && (
+        <Alert variant="success" className="mt-3">
+          Booking succesful, we will contact you soon for the pickup location.
+          Meanwhile we hope you enjoyed your time at DCR.
+        </Alert>
       )}
     </Container>
   );

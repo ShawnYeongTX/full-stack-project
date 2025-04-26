@@ -1,4 +1,4 @@
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -17,6 +17,7 @@ export default function EditUserBooking({
     end_date: bookingDetails.end_date || "",
     total_price: bookingDetails.total_price || 0,
   });
+  const [alertVisible, setAlertVisible] = useState(false);
 
   console.log("Car Price from EditUserBooking:", carPrice);
 
@@ -37,8 +38,6 @@ export default function EditUserBooking({
     // Assuming a daily rate of $50 (modify as needed)
     return diffDays * carPrice;
   };
-
-  console.log("Car Price from EditUserBooking:", carPrice);
 
   useEffect(() => {
     setUpdatedBooking({
@@ -106,12 +105,24 @@ export default function EditUserBooking({
 
       console.log("API Response:", response);
 
-      if (response.data.success) {
-        onEditConfirm(response.data.newBookingDetails);
+      if (response.data.success && response.data) {
+        const confirmedBooking = {
+          ...response.data.newBookingDetails,
+          id: bookingDetails.id, // ✅ Ensure ID is preserved
+          car_details: bookingDetails.car_details, // ✅ Preserve car details
+        };
+
+        console.log("Confimed booking before onEditConfirm", confirmedBooking);
+
+        onEditConfirm(confirmedBooking); // 👈 This will now match and log
       } else {
-        console.error("Failed to update booking:", response.data.message);
+        console.error(
+          "Failed to update booking:",
+          response.data.message || "No message provided"
+        );
       }
-      onHide();
+      setTimeout(() => setAlertVisible(true), 1000);
+      setTimeout(() => onHide(), 4000);
     } catch (error) {
       console.error(
         "Error updating booking:",
@@ -133,9 +144,9 @@ export default function EditUserBooking({
       } else {
         console.error("Error deleting booking:", response.data.message);
       }
-
+      setTimeout(() => setAlertVisible(true), 1000);
       // Close the modal after confirming delete
-      onHide();
+      setTimeout(() => onHide(), 4000);
     } catch (error) {
       console.error("Error deleting booking:", error);
     }
@@ -147,6 +158,13 @@ export default function EditUserBooking({
         <Modal.Title>Update or Delete your Booking</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {/* Error message if booking fails */}
+        {alertVisible && (
+          <Alert variant="success" className="mt-3">
+            Booking details changed succesfully, we will contact you soon for
+            confirmation on your recent changes.
+          </Alert>
+        )}
         <Form>
           <Form.Group className="mb-3" controlId="user-details">
             <Form.Label>Name</Form.Label>

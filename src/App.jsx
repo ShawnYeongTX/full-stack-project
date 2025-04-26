@@ -19,7 +19,7 @@ export default function App() {
             <Route path="/booking" element={<UserBookings />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactUs />} />
-            <Route path="*" element={<AuthPage />} />
+            <Route path="/" element={<HomePage />} />
           </Routes>
         </BrowserRouter>
       </BackgroundImageProvider>
