@@ -104,6 +104,7 @@ export default function CarPage() {
         {loading ? ( // Check if loading
           <Col
             md={4}
+            // sm={6}
             className="d-flex justify-content-center align-items-center"
             style={{ height: "100vh" }}
           >
