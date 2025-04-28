@@ -50,8 +50,6 @@ export default function UserBookings() {
           price_per_day: parseFloat(booking.car_details?.price_per_day || 0),
         }));
 
-
-
         setBookingDetails(bookingsWithPrice);
       } else {
         console.error("No booking details found for this user.");
@@ -164,7 +162,10 @@ export default function UserBookings() {
             ))}
           </Row>
         ) : (
-          <p>No current bookings found.</p>
+          <Alert variant="danger" style={{ marginTop: "5rem" }}>
+            No current bookings found, kindly head over to Home and make a
+            booking today.
+          </Alert>
         )}
       </div>
       <Footer />
