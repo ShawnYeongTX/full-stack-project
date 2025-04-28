@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { AuthContext } from "../components/AuthProvider";
+import "../App.css";
 
 export default function AuthPage() {
   const [modalShow, setModalShow] = useState(null);
@@ -17,6 +18,7 @@ export default function AuthPage() {
   const auth = getAuth();
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (currentUser) navigate("/home");
@@ -41,6 +43,7 @@ export default function AuthPage() {
     try {
       await signInWithEmailAndPassword(auth, username, password);
     } catch (error) {
+      setErrorMessage("Wrong email or password, please try again");
       console.error(error);
     }
   };
@@ -54,7 +57,6 @@ export default function AuthPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgb(0, 0, 0)",
         color: "white",
       }}
     >
@@ -62,9 +64,41 @@ export default function AuthPage() {
         sm={6}
         className="p-4 d-flex flex-column justify-content-center align-items-center"
       >
-        <h2 style={{ marginBottom: "50px" }}>
+        <video
+          src="../backgroundVideo.mp4"
+          autoPlay
+          loop
+          muted
+          style={{
+            position: "absolute",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: "-1",
+          }}
+        ></video>
+        <h2 style={{ marginBottom: "0.5rem" }}>
           Welcome to Deluxe Car Rental Service
         </h2>
+        <br />
+        <h5
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "25rem",
+            marginBottom: "2rem",
+          }}
+        >
+          We provide a wide selection of cars with an affordable price for
+          rental, whether it's daily, weekly or monthly we got you covered.
+        </h5>
+        <br />
+        <h5 style={{ marginBottom: "1rem" }}>
+          Create an account now and join us.
+        </h5>
+
         <Col sm={5} className="d-grid gap-2">
           <Button className="rounded-pill" onClick={handleShowSignUp}>
             Create an account
@@ -89,15 +123,23 @@ export default function AuthPage() {
         <Modal
           show={modalShow !== null}
           onHide={handleClose}
-          animation={false}
+          animation={true}
           centered
+          className="trans-modal"
         >
           <Modal.Body>
-            <h2 className="mb-4" style={{ fontWeight: "bold" }}>
+            <h3
+              className="mb-4"
+              style={{
+                fontWeight: "bold",
+              }}
+            >
               {modalShow === "SignUp"
                 ? "Create your account"
                 : "Log in to your account"}
-            </h2>
+            </h3>
+            {errorMessage && <p className="text-danger">{errorMessage}</p>}{" "}
+            {/* Display error message */}
             <Form
               className="d-grid gap-2 px-5"
               onSubmit={modalShow === "SignUp" ? handleSignUp : handleLogin}
@@ -116,6 +158,9 @@ export default function AuthPage() {
                   type="password"
                   placeholder="Password"
                 />
+                <Form.Text className="muted" style={{ color: "white" }}>
+                  Password must be at least 6 characters
+                </Form.Text>
               </Form.Group>
 
               <Button className="rounded-pill" type="submit">

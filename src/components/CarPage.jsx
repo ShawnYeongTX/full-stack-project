@@ -98,9 +98,6 @@ export default function CarPage() {
     image: carImages[index] ? carImages[index].url : " ",
   }));
 
-  console.log(cars);
-  console.log("Car Price from CarPage:", carPrice);
-
   return (
     <Container>
       <Row className="justify-content-center" style={{ marginTop: "50px" }}>

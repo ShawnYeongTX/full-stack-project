@@ -85,8 +85,10 @@ export default function NewBookingModal({
       <Modal
         show={show}
         onHide={handleClose}
-        backdrop="static"
+        // backdrop="static"
         keyboard={false}
+        animation={true}
+        className="trans-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title>

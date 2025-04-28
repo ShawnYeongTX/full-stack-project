@@ -1,6 +1,7 @@
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import "../App.css";
 
 export default function EditUserBooking({
   show,
@@ -19,8 +20,6 @@ export default function EditUserBooking({
   });
   const [alertVisible, setAlertVisible] = useState(false);
 
-  console.log("Car Price from EditUserBooking:", carPrice);
-
   // Calculate price based on days between start and end date
   const calculatePrice = (startDate, endDate, carPrice) => {
     if (!startDate || !endDate) return 0;
@@ -35,7 +34,7 @@ export default function EditUserBooking({
     const diffTime = Math.abs(end - start);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end days
 
-    // Assuming a daily rate of $50 (modify as needed)
+    // calculating new date with carPrice
     return diffDays * carPrice;
   };
 
@@ -153,7 +152,7 @@ export default function EditUserBooking({
   };
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} className="trans-modal">
       <Modal.Header closeButton>
         <Modal.Title>Update or Delete your Booking</Modal.Title>
       </Modal.Header>
@@ -204,9 +203,11 @@ export default function EditUserBooking({
               type="text"
               value={`RM ${updatedBooking.total_price}`}
               disabled
+              style={{ marginBottom: "1rem" }}
             />
-            <Form.Text className="text-muted">
-              Price is automatically calculated based on booking duration
+            <Form.Text style={{ color: "white" }}>
+              Price is automatically calculated based on booking duration, if
+              you have any question feel free to contact us.
             </Form.Text>
           </Form.Group>
         </Form>

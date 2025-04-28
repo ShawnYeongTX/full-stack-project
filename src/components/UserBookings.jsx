@@ -50,7 +50,7 @@ export default function UserBookings() {
           price_per_day: parseFloat(booking.car_details?.price_per_day || 0),
         }));
 
-        console.log("Bookings with price_per_day:", bookingsWithPrice);
+
 
         setBookingDetails(bookingsWithPrice);
       } else {
